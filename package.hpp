@@ -1,3 +1,9 @@
+#ifndef NETSIM_PACKAGE_HPP
+#define NETSIM_PACKAGE_HPP
+
+#include "types.hpp"
+#include <set>
+
 class Package{
 public:
     Package();
@@ -13,3 +19,5 @@ private:
     static std::set<ElementID> freed_IDs;
 
 };
+
+#endif //NETSIM_PACKAGE_HPP
