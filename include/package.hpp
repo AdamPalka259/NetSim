@@ -1,6 +1,3 @@
-#ifndef IMPLEMENTATION_PACKAGE_HPP
-#define IMPLEMENTATION_PACKAGE_HPP
-
 #ifndef NETSIM_PACKAGE_HPP
 #define NETSIM_PACKAGE_HPP
 
@@ -10,10 +7,15 @@
 class Package{
 public:
     Package();
-    Package(ElementID);
-    Package(Package &&);
-    Package & operator = (Package &&);
-    ElementID get_id()const;
+
+    explicit Package(ElementID id) : id_(id) { assigned_IDs.insert(id_); };
+
+    Package(Package &&) noexcept;
+
+    Package & operator = (Package &&) noexcept;
+
+    ElementID get_id() const { return id_; }
+
     ~Package();
 
 private:
@@ -24,3 +26,4 @@ private:
 };
 
 #endif //NETSIM_PACKAGE_HPP
+
