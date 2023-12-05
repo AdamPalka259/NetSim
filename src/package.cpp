@@ -18,7 +18,7 @@ Package::Package() {
 
 Package::Package(Package &&p){
     id_ = p.id_;
-    p.id = -1;
+    p.id_ = -1;
 }
 
 
@@ -27,7 +27,7 @@ Package &Package::operator=(Package &&p){
         freed_IDs.insert(id_);
         assigned_IDs.erase(id_);
     }
-    d_ = p.id_;
+    id_ = p.id_;
     p.id_ = -1;
 }
 
