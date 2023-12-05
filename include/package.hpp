@@ -1,7 +1,6 @@
-<<<<<<< HEAD
 #ifndef IMPLEMENTATION_PACKAGE_HPP
 #define IMPLEMENTATION_PACKAGE_HPP
-=======
+
 #ifndef NETSIM_PACKAGE_HPP
 #define NETSIM_PACKAGE_HPP
 
@@ -25,4 +24,3 @@ private:
 };
 
 #endif //NETSIM_PACKAGE_HPP
->>>>>>> 72c1fb3598bc012282c16bdc92e33951794ede3d

@@ -12,5 +12,5 @@ include_directories(
 )
 
 set(SOURCE_FILES
-
+        src/package.cpp
         )
