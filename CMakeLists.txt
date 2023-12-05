@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 project(NetSim)
 
-cmake_minimum_required(VERSION 3.13)
-project(implementation)
 
 set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion)
@@ -15,3 +13,22 @@ set(SOURCE_FILES
         src/package.cpp
         src/storage_types.cpp
         )
+
+set(SOURCES_FILES_TESTS
+        test/test_package.cpp
+        test/test_storage_types.cpp
+        include/config.hpp)
+
+add_executable(NetSim_packages ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
+
+target_include_directories(NetSim_packages PUBLIC
+        googletest-master/googlemock/include
+        googletest-master/googletest/include
+        mocks
+        )
+
+add_subdirectory(googletest-master)
+
+target_link_libraries(NetSim_packages gmock)
+
+target_compile_definitions(NetSim_packages PUBLIC EXERCISE_ID=EXERCISE_ID_PACKAGES)
