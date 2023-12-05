@@ -1,5 +1,5 @@
 # NetSim
-System służący do modelowania i symulacji działania sieci – na przykładzie “linii produkcyjnych” w fabryce
+System służący do modelowania i symulacji działania sieci – na przykładzie “linii produkcyjnych” w fabryce.
 Członkowie grupy:
 
 (1) Adam Palka, 416452
