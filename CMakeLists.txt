@@ -17,9 +17,15 @@ set(SOURCE_FILES
         )
 
 set(SOURCES_FILES_TESTS
+        test/main_gtest.cpp
+        #test/test_Factory.cpp
+        #test/test_factory_io.cpp
+        test/test_nodes.cpp
         test/test_package.cpp
+        #test/test_reports.cpp
+        #test/test_simulate.cpp
         test/test_storage_types.cpp
-        include/config.hpp)
+        )
 
 add_executable(NetSim_packages ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
 
@@ -33,4 +39,4 @@ add_subdirectory(googletest-master)
 
 target_link_libraries(NetSim_packages gmock)
 
-target_compile_definitions(NetSim_packages PUBLIC EXERCISE_ID=EXERCISE_ID_PACKAGES)
+target_compile_definitions(NetSim_packages PUBLIC EXERCISE_ID=EXERCISE_ID_NODES)
