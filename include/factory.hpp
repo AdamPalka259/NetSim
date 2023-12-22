@@ -1,89 +1,101 @@
-#ifndef IMPLEMENTATION_NETSIM_FACTORY_HPP
-#define IMPLEMENTATION_NETSIM_FACTORY_HPP
+#ifndef NETSIM_FACTORY_HPP
+#define NETSIM_FACTORY_HPP
 
-#include <vector>
-#include <algorithm>
-#include "types.hpp"
 #include "nodes.hpp"
-#include <stdexcept>
-#include <string>
+#include <memory>
+#include <iostream>
+#include <sstream>
 
-
-
-template<class Node>
-class NodeCollection {
+template <typename Node> class NodeCollection{
 public:
-    using container_t = typename std::list<Node>;
+    using container_t = typename std::vector<Node>;
     using iterator = typename container_t::iterator;
     using const_iterator = typename container_t::const_iterator;
+    void add(Node&& node) {node_vector_.push_back(std::move(node));}
 
-    void add(Node&& node) { nodes_.push_back(std::move(node)); };
+    iterator find_by_id(ElementID id){
+        auto it = std::find_if(node_vector_.begin(),node_vector_.end(),
+                               [id](auto& elem){ return (elem.get_id() == id);});
+        return it;
+    }
 
-    NodeCollection<Node>::iterator find_by_id(ElementID id);
-    NodeCollection<Node>::const_iterator find_by_id(ElementID id) const;
+    const_iterator find_by_id(ElementID id) const{
+        auto it = std::find_if(node_vector_.cbegin(),node_vector_.cend(),
+                               [id](const auto& elem){ return (elem.get_id() == id);});
+        return it;
+    }
 
+    void remove_by_id(ElementID id){
+        auto it = std::find_if(node_vector_.begin(),node_vector_.end(),
+                               [id](auto& elem){ return (elem.get_id() == id);});
+        if (it != node_vector_.end()){
+            node_vector_.erase(it);
+        }
+    }
 
-    void remove_by_id(ElementID id);
-
-    iterator begin() {return nodes_.begin();}
-    iterator end() {return nodes_.end();}
-    const_iterator cbegin() const {return nodes_.cbegin();}
-    const_iterator cend() const {return nodes_.cend();}
-    const_iterator begin() const {return nodes_.begin();}
-    const_iterator end() const {return nodes_.end();}
+    const_iterator cbegin() const { return node_vector_.cbegin();}
+    const_iterator cend() const { return node_vector_.cend();}
+    const_iterator begin() const { return node_vector_.begin();}
+    const_iterator end() const { return node_vector_.end();}
+    iterator begin() { return node_vector_.begin();}
+    iterator end() { return node_vector_.end();}
 private:
-    std::list<Node> nodes_;
+    container_t node_vector_;
 };
-
 
 class Factory{
 public:
-    void add_ramp(Ramp&& ramp) {Ramps.add(std::move(ramp));};
-    void remove_ramp(ElementID id) {Ramps.remove_by_id(id);}
-
-    void add_worker(Worker&& worker) {Workers.add(std::move(worker));}
-    void remove_worker(ElementID id);
-
-    void add_storehouse(Storehouse&& storehouse){Storehouses.add(std::move(storehouse));}
-    void remove_storehouse(ElementID id);
-
-    NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id) {return Ramps.find_by_id(id);}
-    NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id) const {return Ramps.find_by_id(id);}
-    NodeCollection<Ramp>::const_iterator ramp_cbegin() {return Ramps.cbegin();}
-    NodeCollection<Ramp>::const_iterator ramp_cend() {return Ramps.end();}
-
-    NodeCollection<Worker>::iterator find_worker_by_id(ElementID id){return Workers.find_by_id(id);}
-    NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const {return Workers.find_by_id(id);}
-    NodeCollection<Worker>::const_iterator worker_cbegin() {return Workers.cbegin();}
-    NodeCollection<Worker>::const_iterator worker_cend() {return Workers.cend();}
-
-    NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id){return Storehouses.find_by_id(id);}
-    NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id) const {return Storehouses.find_by_id(id);}
-    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() {return Storehouses.cbegin();}
-    NodeCollection<Storehouse>::const_iterator storehouse_cend() {return Storehouses.cend();}
-
-    bool is_consistent(void);
-    void do_deliveries(Time t);
-    void do_package_passing(void);
-    void do_work(Time t);
+        //Ramp related methods
+    void add_ramp(Ramp&& new_ramp) {_Ramp_collection.add(std::move(new_ramp));}
+    void remove_ramp(ElementID id) {_Ramp_collection.remove_by_id(id);};
+    NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id) {return _Ramp_collection.find_by_id(id);}
+    NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id) const {return _Ramp_collection.find_by_id(id);}
+    NodeCollection<Ramp>::const_iterator ramp_cbegin() const {return _Ramp_collection.cbegin();}
+    NodeCollection<Ramp>::const_iterator ramp_cend() const {return _Ramp_collection.cend();}
+        //Worker related methods
+    void add_worker(Worker&& new_worker) {_Worker_collection.add(std::move(new_worker));}
+    void remove_worker(ElementID id) { remove_receiver<Worker>(_Worker_collection,id);};
+    NodeCollection<Worker>::iterator find_worker_by_id(ElementID id) {return _Worker_collection.find_by_id(id);}
+    NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const {return _Worker_collection.find_by_id(id);}
+    NodeCollection<Worker>::const_iterator worker_cbegin() const {return _Worker_collection.cbegin();}
+    NodeCollection<Worker>::const_iterator worker_cend() const {return _Worker_collection.cend();}
+        //Storehouse related methods
+    void add_storehouse(Storehouse&& new_storehouse) {_Storehouse_collection.add(std::move(new_storehouse));}
+    void remove_storehouse(ElementID id) { remove_receiver<Storehouse>(_Storehouse_collection,id);};
+    NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id) {return _Storehouse_collection.find_by_id(id);}
+    NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id) const {return _Storehouse_collection.find_by_id(id);}
+    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const {return _Storehouse_collection.cbegin();}
+    NodeCollection<Storehouse>::const_iterator storehouse_cend() const {return _Storehouse_collection.cend();}
+        //Whole factory methods
+    bool is_consistent();
+    void do_deliveries(Time t) {for(auto& ramp : _Ramp_collection){ramp.deliver_goods(t);}};
+    void do_package_passing();
+    void do_work(Time t) {for(auto& worker : _Worker_collection){worker.do_work(t);}};
 
 private:
-    template <class Node>
-    void remove_receiver(NodeCollection<Node>& collection, ElementID id);
+    template<typename Node>
+    void remove_receiver(NodeCollection<Node>& collection, ElementID id){
+        collection.remove_by_id(id);
+        for(auto &ramp : _Ramp_collection){
+            ramp.receiver_preferences_.remove_receiver(&(*collection.find_by_id(id)));
+        }
+        for(auto &worker : _Worker_collection){
+            worker.receiver_preferences_.remove_receiver(&(*collection.find_by_id(id)));
+        }
+    }
+    NodeCollection<Ramp> _Ramp_collection;
+    NodeCollection<Worker> _Worker_collection;
+    NodeCollection<Storehouse> _Storehouse_collection;
+};
 
-    NodeCollection<Ramp> Ramps;
-    NodeCollection<Worker> Workers;
-    NodeCollection<Storehouse> Storehouses;
+enum Component {LOADING_RAMP, WORKER, STOREHOUSE, LINK, NONE};
 
-    enum class NodeColor {
-        Univisited,
-        Visited,
-        Verified
-    };
-
-    bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor> &node_colors);
+struct ParsedLineData{
+    Component TAG;
+    std::map<std::string, std::string> params;
 };
 
 Factory load_factory_structure(std::istream& is);
 void save_factory_structure(Factory& factory, std::ostream& os);
-#endif
+ParsedLineData parse_line(std::string line);
+#endif //NETSIM_FACTORY_HPP
