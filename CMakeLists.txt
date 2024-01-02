@@ -16,6 +16,7 @@ set(SOURCE_FILES
         src/helpers.cpp
         src/factory.cpp
         src/reports.cpp
+        src/simulation.cpp
         )
 
 set(SOURCES_FILES_TESTS
@@ -41,4 +42,4 @@ add_subdirectory(googletest-master)
 
 target_link_libraries(NetSim_packages gmock)
 
-target_compile_definitions(NetSim_packages PUBLIC EXERCISE_ID=REPORTING)
+target_compile_definitions(NetSim_packages PUBLIC EXERCISE_ID=SIMULATION)

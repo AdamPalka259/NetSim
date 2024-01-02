@@ -90,7 +90,7 @@ public:
 
     bool is_consistent(void);
 
-    void do_delivieries(Time t) { for (auto &ramp: Ramps_) { ramp.deliver_goods(t); }};
+    void do_deliveries(Time t) { for (auto &ramp: Ramps_) { ramp.deliver_goods(t); }};
 
     void do_package_passing(void);
 
