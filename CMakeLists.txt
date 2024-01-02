@@ -16,6 +16,7 @@ set(SOURCE_FILES
         src/helpers.cpp
         src/factory.cpp
         src/reports.cpp
+        src/simulation.cpp
         )
 
 set(SOURCES_FILES_TESTS
