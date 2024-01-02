@@ -48,24 +48,22 @@ void PackageSender::send_package() {
 }
 
 void Worker::do_work(Time t){
-    if(pd_ == 1){
+    if (!bufor_ && !q_->empty()) {
         bufor_.emplace(q_->pop());
-        push_package(Package(bufor_.value().get_id()));
-        bufor_.reset();
+        t_ = t;
+
+        if (t - t_ + 1 == pd_) {
+            push_package(Package(bufor_.value().get_id()));
+            bufor_.reset();
+
+            if (!q_->empty()) { bufor_.emplace(q_->pop()); }
+        }
     }
     else {
-        if (!bufor_ && !q_->empty()){
-            bufor_.emplace(q_->pop());
-            t_ = t;
-        }
-        else {
-            if ( t - t_ == pd_){
-                push_package(Package(bufor_.value().get_id()));
-                bufor_.reset();
-                if(!q_->empty()){
-                    bufor_.emplace(q_->pop());
-                }
-            }
+        if (t - t_ + 1 == pd_) {
+            push_package(Package(bufor_.value().get_id()));
+            bufor_.reset();
+            if (!q_->empty()) { bufor_.emplace(q_->pop()); }
         }
     }
 }
