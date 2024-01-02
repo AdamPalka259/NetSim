@@ -67,26 +67,26 @@ public:
 
     NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id) const { return Ramps_.find_by_id(id); }
 
-    NodeCollection<Ramp>::const_iterator ramp_cbegin() { return Ramps_.cbegin(); }
+    NodeCollection<Ramp>::const_iterator ramp_cbegin() const { return Ramps_.cbegin(); }
 
-    NodeCollection<Ramp>::const_iterator ramp_cend() { return Ramps_.end(); }
+    NodeCollection<Ramp>::const_iterator ramp_cend() const { return Ramps_.end(); }
 
     NodeCollection<Worker>::iterator find_worker_by_id(ElementID id) { return Workers_.find_by_id(id); }
 
     NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const { return Workers_.find_by_id(id); }
 
-    NodeCollection<Worker>::const_iterator worker_cbegin() { return Workers_.cbegin(); }
+    NodeCollection<Worker>::const_iterator worker_cbegin() const { return Workers_.cbegin(); }
 
-    NodeCollection<Worker>::const_iterator worker_cend() { return Workers_.cend(); }
+    NodeCollection<Worker>::const_iterator worker_cend() const { return Workers_.cend(); }
 
     NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id) { return Storehouses_.find_by_id(id); }
 
     NodeCollection<Storehouse>::const_iterator
     find_storehouse_by_id(ElementID id) const { return Storehouses_.find_by_id(id); }
 
-    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() { return Storehouses_.cbegin(); }
+    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const { return Storehouses_.cbegin(); }
 
-    NodeCollection<Storehouse>::const_iterator storehouse_cend() { return Storehouses_.cend(); }
+    NodeCollection<Storehouse>::const_iterator storehouse_cend() const { return Storehouses_.cend(); }
 
     bool is_consistent(void);
 

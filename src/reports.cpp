@@ -1,4 +1,5 @@
 #include "reports.hpp"
+#include "ostream"
 
 void generate_structure_report(const Factory& f, std::ostream& os){
     os << "\n== LOADING RAMPS ==\n";
