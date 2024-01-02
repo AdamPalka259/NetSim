@@ -51,7 +51,7 @@ void generate_structure_report(const Factory& f, std::ostream& os){
 
 void generate_simulation_turn_report(const Factory& f, std::ostream& os, Time t){
     os << "=== [ Turn: " << t << " ] ===";
-    
+
     os << "\n\n== WORKERS ==\n";
     for(auto w = f.worker_cbegin(); w != f.worker_cend(); w++){
         const auto &worker = *w;
