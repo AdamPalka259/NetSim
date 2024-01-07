@@ -83,7 +83,13 @@ protected:
 
 class Ramp : public PackageSender {
 public:
-    Ramp(ElementID id, TimeOffset di) : PackageSender(), id_(id), di_(di) {}
+    explicit Ramp(ElementID id, TimeOffset di) : PackageSender(), id_(id), di_(di) {}
+
+    Ramp(Ramp&& ramp) = default;
+
+    Ramp(const Ramp &ramp);
+
+    Ramp& operator=(const Ramp &ramp) noexcept;
 
     void deliver_goods(Time t);
 
@@ -100,8 +106,20 @@ private:
 
 class Worker : public IPackageReceiver, public PackageSender {
 public:
-    Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q)
-            : PackageSender(), id_(id), pd_(pd), q_(std::move(q)) {}
+    explicit Worker(ElementID id, TimeOffset pd, std::unique_ptr<IPackageQueue> q)
+    : PackageSender(), id_(id), pd_(pd), q_(std::move(q)) {}
+
+    Worker() = default;
+
+    Worker(Worker&& worker) = default;
+
+    Worker(const Worker &worker);
+
+    Worker& operator=(const Worker &worker) noexcept;
+
+    static bool sort_by_ID(const Worker& a, const Worker& b) {
+        return a.get_id() < b.get_id();
+    }
 
     void do_work(Time t);
 
@@ -136,8 +154,18 @@ private:
 
 class Storehouse : public IPackageReceiver {
 public:
-    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO))
+    explicit Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO))
             : id_(id), d_(std::move(d)) {}
+
+    Storehouse(Storehouse&& storehouse) = default;
+
+    Storehouse(const Storehouse &storehouse) : id_(storehouse.get_id()) {}
+
+    Storehouse& operator=(const Storehouse &storehouse) noexcept { id_ = storehouse.get_id(); return *this;}
+
+    static bool sort_by_ID(const Storehouse& a, const Storehouse& b) {
+        return a.get_id() < b.get_id();
+    }
 
     void receive_package(Package &&p) override;
 

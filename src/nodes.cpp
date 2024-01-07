@@ -68,12 +68,40 @@ void Worker::do_work(Time t){
     }
 }
 
+Worker::Worker(const Worker &worker){
+    id_ = worker.get_id();
+    pd_ = worker.get_processing_duration();
+    receiver_preferences_ = worker.receiver_preferences_;
+    q_ = std::make_unique<PackageQueue>(worker.get_queue()->get_queue_type());
+}
+
+Worker& Worker::operator=(const Worker &worker) noexcept {
+    id_ = worker.get_id();
+    pd_ = worker.get_processing_duration();
+    receiver_preferences_ = worker.receiver_preferences_;
+    q_ = std::make_unique<PackageQueue>(worker.get_queue()->get_queue_type());
+    return *this;
+}
+
 void Worker::receive_package(Package&& p) {
     q_->push(std::move(p));
 }
 
 void Storehouse::receive_package(Package&& p) {
     d_->push(std::move(p));
+}
+
+Ramp::Ramp(const Ramp &ramp) {
+    id_ = ramp.get_id();
+    di_ = ramp.get_delivery_interval();
+    receiver_preferences_ = ramp.receiver_preferences_;
+}
+
+Ramp& Ramp::operator=(const Ramp &ramp) noexcept{
+    id_ = ramp.get_id();
+    di_ = ramp.get_delivery_interval();
+    receiver_preferences_ = ramp.receiver_preferences_;
+    return *this;
 }
 
 void Ramp::deliver_goods(Time t) {
